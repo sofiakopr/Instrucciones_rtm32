@@ -238,7 +238,7 @@ TRACE [src/opcodes/arithmetic.m:44]: [ADD] R10 (0x0000000F) = R11 (0x00000
 00A) + R12 (0x00000005)
 TRACE [src/debug/debug.c:295]: [5] Handler finished execution successfully.
 
-SUB: (usando LUI y ORI)
+**SUB: (usando LUI y ORI)**
 
 Se repite el mismo procedimiento que el anterior con LUI y ORI, usando los mismos registros y valores en estos.
 
@@ -295,5 +295,57 @@ TRACE [src/opcodes/arithmetic.m:48]: [SUB] R10 (0x00000005) = R11 (0x00000
 00A) - R12 (0x00000005)
 TRACE [src/debug/debug.c:295]: [5] Handler finished execution successfully.
 
+**ANDI**
+
+**Se repite el mismo procedimiento que el anterior con LUI y ORI, usando los mismos registros y valores en estos, lo único que cambia es que se usa AND:**
+
+Formato I:
+opcode | rs | rt | imm 
+
+opcode=00100
+rs=01011
+rt=01100
+imm=01010000000001000
+
+Instrucción completa:
+00100010110110001010000000001000
+
+Pasando esto a Hexadecimal:
+0x22D8A008
+
+Se muestran los comandos ingresados en consola y el resultado:
+
+Ingresados:
+
+Primer Registro:
+RTM32> s PC 0x00
+Program Counter (PC) set to 0x00000000
+RTM32> s [0x00] 0xC8160000
+RTM32> n 1
+Stepped instructions. Target PC: 0x00000004
+RTM32> s [0x04] 0x2AD6000A
+RTM32> n 1
+
+Segundo Registro:
+RTM32> s [0x08] 0xC8180000
+RTM32> n 1
+Stepped instructions. Target PC: 0x0000000C
+RTM32> s [0x0C] 0x2B180005
+RTM32> n 1
+
+ANDI:
+RTM32> s PC 0x10
+Program Counter (PC) set to 0x00000010
+RTM32> s [0x10] 0x22D8A008
+RTM32> n 1
+
+Resultado:
+
+DEBUG [src/debug/execution.m:17]: Stepping CPU pipeline for 1 cycles. Current PC: 0x00000010
+TRACE [src/cpu.c:245]: RAM size: 0x00001000 read: 0x00000010
+TRACE [src/cpu.c:466]: Instruction: 0x22D8A008
+TRACE [src/cpu.c:467]: Opcode: 0b00100
+TRACE [src/opcodes/logical.m:3]: [ANDI] R12 (0x00000008) = R11 (0x0000000A) & 0xA008
+TRACE [src/debug/debug.c:295]: [5] Handler finished execution successfully.
 
 
