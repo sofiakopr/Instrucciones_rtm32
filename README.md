@@ -295,6 +295,170 @@ TRACE [src/opcodes/arithmetic.m:48]: [SUB] R10 (0x00000005) = R11 (0x00000
 00A) - R12 (0x00000005)
 TRACE [src/debug/debug.c:295]: [5] Handler finished execution successfully.
 
+
+**AND**
+
+**Se repite el mismo procedimiento que el anterior con LUI y ORI, usando los mismos registros y valores en estos, lo único que cambia es que se usa AND:**
+
+Formato R:
+opcode | rs | rt | rd | aux | X | funct
+
+opcode= 00000
+rs= 01011
+rt= 01100
+rd= 01010
+aux= 00000
+X= 0
+funct= 001000
+
+Instrucción completa:
+00000010110110001010000000001000
+
+Pasando esto a Hexadecimal:
+0x02D8A008
+
+**LUI $t1,0**
+opcode = 11001
+rs = 00000
+rt = 01011
+h = 0
+imm = 0000000000000000
+
+Instrucción completa:
+11001000000101100000000000000000
+
+Pasando esto a Hexadecimal:
+0xC8160000
+
+**ORI $t1,$t1,14**
+opcode = 00101
+rs = 01011
+rt = 01011
+h = 0
+imm = 0000000000001110
+
+Instrucción completa:
+00101010110101100000000000001110
+
+Pasando esto a Hexadecimal:
+0x2AD6000E
+
+**LUI $t2,0**
+opcode = 11001
+rs = 00000
+rt = 01100
+h = 0
+imm = 0000000000000000
+
+Instrucción completa:
+11001000000110000000000000000000
+
+Pasando esto a Hexadecimal:
+0xC8180000
+
+**ORI $t2,$t2,10**
+opcode = 00101
+rs = 01100
+rt = 01100
+h = 0
+imm = 0000000000001010
+
+Instrucción completa:
+00101011000110000000000000001010
+
+Pasando esto a Hexadecimal:
+0x2B18000A
+
+Se muestran los comandos ingresados en consola y el resultado:
+
+Ingresados:
+
+Primer Registro:
+RTM32> s PC 0x00
+Program Counter (PC) set to 0x00000000
+RTM32> s [0x00] 0xC8160000
+RTM32> n 1
+Stepped instructions. Target PC: 0x00000004
+RTM32> s [0x04] 0x2AD6000A
+RTM32> n 1
+
+Segundo Registro:
+RTM32> s [0x08] 0xC8180000
+RTM32> n 1
+Stepped instructions. Target PC: 0x0000000C
+RTM32> s [0x0C] 0x2B180005
+RTM32> n 1
+
+AND:
+RTM32> s PC 0x10
+Program Counter (PC) set to 0x00000010
+RTM32> s [0x10] 0x0x2B18000A
+RTM32> n 1
+
+Por ahora, AND no funciona del todo. Al correr la instrucción, el registro 10 que almacena el resultado pasa a tener valor R[10]: 0x0000000F, cuando al hacer un AND con 1010 (A, valor del registro 12) y 1110 (E, valor del registro 11) debería devolver R[10]: 0x0000000A, siendo estos los bits en común que tienen los registros utilizados. Si este mensaje no desapareció para cuando se corrija este trabajo, es porque no lo supe resolver. 
+
+**OR**
+
+**Se repite el mismo procedimiento que el de AND, usando los mismos registros y valores en estos, lo único que cambia es que se usa OR:**
+
+Formato R:
+opcode | rs | rt | rd | aux | X | funct
+
+opcode=00000
+rs=01011
+rt=01100
+rd=01010
+aux=00000
+X=0
+funct= 001001
+
+Instrucción completa:
+00000010110110001010000000001001
+
+Pasando esto a Hexadecimal:
+0x02D8A009
+
+Se muestran los comandos ingresados en consola y el resultado:
+
+Ingresados:
+
+Primer Registro:
+RTM32> s PC 0x00
+Program Counter (PC) set to 0x00000000
+RTM32> s [0x00] 0xC8160000
+RTM32> n 1
+Stepped instructions. Target PC: 0x00000004
+RTM32> s [0x04] 0x2AD6000E
+RTM32> n 1
+
+Segundo Registro:
+RTM32> s [0x08] 0xC8180000
+RTM32> n 1
+Stepped instructions. Target PC: 0x0000000C
+RTM32> s [0x0C] 0x2B18000A
+RTM32> n 1
+
+OR:
+RTM32> s PC 0x10
+Program Counter (PC) set to 0x00000010
+RTM32> s [0x10] 0x02D8A009
+RTM32> n 1
+
+DEBUG [src/debug/execution.m:17]: Stepping CPU pipeline for 1 cycles. Curr
+ent PC: 0x00000010
+TRACE [src/cpu.c:245]: RAM size: 0x00001000 read:0x00000010
+TRACE [src/cpu.c:466]: Instruction: 0x02D8A009
+TRACE [src/cpu.c:467]: Opcode: 0b00000
+TRACE [src/debug/debug.c:295]: [5] Handler finished execution successfully.
+
+Los valores en los registros:
+R[11]: 0x0000000E
+R[12]: 0x0000000A
+
+El valor que toma el registro 10 (en el que se guarda el resultado de la instrucción) después de correr OR:
+R[10]: 0x0000000E
+
+
 **ANDI**
 
 **Se repite el mismo procedimiento que el anterior con LUI y ORI, usando los mismos registros y valores en estos, lo único que cambia es que se usa AND:**
